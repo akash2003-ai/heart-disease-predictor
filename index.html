@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Heart Disease Risk Designer</title>
+        <link rel="stylesheet" href="styles.css" />
+        <style>
+            /* Background Designer styles */
+            .bg-designer {
+                display: grid;
+                grid-template-columns: 1fr 320px;
+                gap: 1rem;
+                align-items: start;
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            .bg-designer .controls { padding: 0.5rem; }
+            .bg-designer label { display:block; margin-bottom:0.6rem; font-size:0.9rem; }
+            .bg-designer .preview { border-radius:8px; overflow:hidden; border:1px solid rgba(0,0,0,0.08); height:160px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+            .bg-designer .small { font-size:0.85rem; color:#555; }
+            .bg-designer .presets { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem }
+            .bg-designer .preset { padding:6px 8px; border-radius:6px; background:#fff; border:1px solid #ddd; cursor:pointer; font-size:0.85rem }
+            .bg-designer .actions { display:flex; gap:0.5rem; margin-top:0.6rem }
+            .bg-designer input[type="color"]{ width:56px; height:36px; padding:0; border:0; background:transparent }
+            @media (max-width:800px){ .bg-designer{ grid-template-columns: 1fr; } }
+        </style>
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Heart Disease Risk — Predictor UI</h1>
+                <p class="lead">Fill patient data below and press Predict.</p>
+            </header>
+
+            <!-- Background designer removed -->
+
+            <section class="card">
+                <form id="predict-form">
+                    <div class="grid">
+                        <label>Gender
+                            <select name="gender" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </label>
+
+                        <label>Age
+                            <input name="age" type="number" min="1" max="120" value="55" required />
+                        </label>
+
+                        <label>Current Smoker
+                            <select name="currentSmoker">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>Cigarettes per day
+                            <input name="cigsPerDay" type="number" min="0" max="100" value="0" />
+                        </label>
+
+                        <label>On BP Meds
+                            <select name="BPMeds">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>Prev. Stroke
+                            <select name="prevalentStroke">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>Prev. Hypertension
+                            <select name="prevalentHyp">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>Diabetes
+                            <select name="diabetes">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </label>
+
+                        <label>Total Cholesterol (mg/dL)
+                            <input name="totChol" type="number" min="50" max="600" step="1" value="200" />
+                        </label>
+
+                        <label>Systolic BP
+                            <input name="sysBP" type="number" min="50" max="300" step="1" value="120" />
+                        </label>
+
+                        <label>Diastolic BP
+                            <input name="diaBP" type="number" min="30" max="200" step="1" value="80" />
+                        </label>
+
+                        <label>BMI
+                            <input name="BMI" type="number" min="10" max="60" step="0.1" value="25.0" />
+                        </label>
+
+                        <label>Heart Rate
+                            <input name="heartRate" type="number" min="30" max="200" value="70" />
+                        </label>
+
+                        <label>Glucose
+                            <input name="glucose" type="number" min="40" max="500" value="100" />
+                        </label>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" id="sample-btn">Fill Sample</button>
+                        <button type="button" id="predict-raw">Predict (raw)</button>
+                        <button type="button" id="clear-btn">Reset to defaults</button>
+                        <button type="button" id="blank-btn">Blank All</button>
+                        <button type="submit" class="primary">Predict</button>
+                    </div>
+                </form>
+
+                <div id="result" class="result">
+                    <strong>Result will appear here.</strong>
+                </div>
+            </section>
+
+            
+        </main>
+
+            <script>
+            const form = document.getElementById('predict-form');
+            const resultDiv = document.getElementById('result');
+            const sampleBtn = document.getElementById('sample-btn');
+
+            sampleBtn.addEventListener('click', () => {
+                // fill form with a sample patient
+                const values = {
+                    gender: 'male', age: 55, currentSmoker: 'no', cigsPerDay: 0, BPMeds: 'no', prevalentStroke: 'no', prevalentHyp: 'no', diabetes: 'no', totChol: 240, sysBP: 140, diaBP: 90, BMI: 28.5, heartRate: 80, glucose: 100
+                };
+                for (const [k, v] of Object.entries(values)) {
+                    const el = form.elements[k];
+                    if (el) el.value = v;
+                }
+            });
+
+            // Helper to collect form values and coerce numeric fields
+            function collectFormData() {
+                const data = {};
+                new FormData(form).forEach((value, key) => data[key] = value);
+                ['age','cigsPerDay','totChol','sysBP','diaBP','BMI','heartRate','glucose'].forEach(k => {
+                    if (data[k] !== undefined) data[k] = Number(data[k]);
+                });
+                return data;
+            }
+
+            async function sendPrediction(showRaw = false) {
+                resultDiv.innerHTML = 'Predicting...';
+                const data = collectFormData();
+                try {
+                    const resp = await fetch('http://localhost:5000/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!resp.ok) {
+                        const text = await resp.text();
+                        throw new Error(text || resp.statusText);
+                    }
+
+                    const json = await resp.json();
+                    // Show detailed prediction including numeric class and probability if available
+                    const prob = (json.probability !== undefined && json.probability !== null) ? `${(json.probability*100).toFixed(1)}%` : 'N/A';
+                    if (showRaw) {
+                        resultDiv.innerHTML = `<pre class="small">${JSON.stringify(json, null, 2)}</pre>`;
+                    } else {
+                        resultDiv.innerHTML = `<div class="outcome"><strong>${json.message}</strong><div class="small">class: ${json.prediction} &nbsp;|&nbsp; confidence: ${prob}</div></div>`;
+                    }
+                } catch (err) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+                }
+            }
+
+            // submit (Predict) uses form submit event
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                sendPrediction(false);
+            });
+
+            // raw button shows the raw JSON response (useful to see numeric prediction/probability)
+            const predictRawBtn = document.getElementById('predict-raw');
+            predictRawBtn.addEventListener('click', () => sendPrediction(true));
+
+            // Reset-to-defaults button shows confirmation then resets the form
+            const clearBtn = document.getElementById('clear-btn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    const confirmed = window.confirm('Reset form to original defaults?');
+                    if (!confirmed) return;
+                    // Reset form fields to their default HTML values
+                    form.reset();
+                    // Reset result display
+                    resultDiv.innerHTML = '<strong>Result will appear here.</strong>';
+                });
+            }
+
+            // Blank All button: clear every input/select value (deselect selects and empty numbers)
+            const blankBtn = document.getElementById('blank-btn');
+            if (blankBtn) {
+                blankBtn.addEventListener('click', () => {
+                    // No confirmation for blanking (fast action). If you want confirmation, wrap with confirm().
+                    for (const el of Array.from(form.elements)) {
+                        // Skip buttons and fieldsets
+                        if (!el.name) continue;
+                        const tag = el.tagName.toLowerCase();
+                        const type = (el.type || '').toLowerCase();
+                        if (tag === 'select') {
+                            try { el.selectedIndex = -1; } catch (e) { el.selectedIndex = 0; }
+                        } else if (type === 'number' || type === 'text' || type === 'tel' || type === 'email' || type === 'search' || type === 'url' || type === 'hidden') {
+                            el.value = '';
+                        } else if (type === 'checkbox' || type === 'radio') {
+                            el.checked = false;
+                        } else if (type === 'range' || type === 'color') {
+                            el.value = '';
+                        } else {
+                            // fallback: clear value
+                            try { el.value = ''; } catch (e) { /* ignore */ }
+                        }
+                    }
+                    // Clear result area as well
+                    resultDiv.innerHTML = '<strong>Result will appear here.</strong>';
+                });
+            }
+        </script>
+    </body>
+</html>

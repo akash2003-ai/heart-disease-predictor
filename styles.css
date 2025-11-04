@@ -1,0 +1,29 @@
+.root{
+  --bg:#f6f8fa; --card:#ffffff; --accent:#0b5fff; --muted:#666;
+}
+*{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif}
+/* Background set to user-provided heart-themed image */
+body{
+  margin:0;
+  color:#111;
+  background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Ffree-backgrounds-photos%2Fheart-attack&psig=AOvVaw0AIA9CGRfbOW0gJ9ho4inX&ust=1762269236597000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCJimstCi1pADFQAAAAAdAAAAABAK');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+.container{max-width:980px;margin:28px auto;padding:18px}
+header h1{margin:0 0 6px;font-size:1.6rem}
+.lead{margin:0 0 18px;color:var(--muted)}
+.card{background: rgba(255,255,255,0.92);border-radius:10px;padding:18px;box-shadow:0 6px 20px rgba(20,30,60,0.08)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:flex;flex-direction:column;font-size:0.9rem}
+input,select{margin-top:6px;padding:8px 10px;border-radius:6px;border:1px solid #e6e9ee;background:#fff}
+.actions{display:flex;gap:12px;margin-top:14px}
+button{padding:10px 14px;border-radius:8px;border:1px solid transparent;background:#eee;cursor:pointer}
+.primary{background:var(--accent);color:#fff}
+.result{margin-top:16px;padding:12px;border-radius:8px;background:#f3f7ff;border:1px solid rgba(11,95,255,0.08)}
+.outcome{font-size:1.1rem}
+.small{font-size:0.85rem;color:var(--muted);margin-top:6px}
+.error{color:#a80000}
+footer{margin-top:14px;color:var(--muted);font-size:0.9rem}
