@@ -1,50 +1,42 @@
-# Heart Disease Predictor — Designer Frontend + Local Flask backend
+# 🫀 Heart Disease Predictor  
+*A Machine Learning–powered health risk detection system with Flask backend and interactive web UI*
 
-This small project provides a designer UI (`index.html`) that posts patient data to a local Flask endpoint which loads the trained model and scaler saved by your notebook.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
+![Flask](https://img.shields.io/badge/Flask-Backend-black?logo=flask)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML%20Model-orange?logo=scikitlearn)
+![HTML](https://img.shields.io/badge/Frontend-HTML%2FCSS-green?logo=html5)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-Files added:
-- `index.html` — designer webpage (form + JS) that POSTs JSON to `http://localhost:5000/predict`.
-- `styles.css` — page styling.
-- `app.py` — small Flask server that loads `models/disease_model.pkl` and `models/scaler.pkl` and exposes `/predict`.
-- `requirements.txt` — Python dependencies.
+---
 
-Before you start
-1. Make sure the trained model and scaler from your notebook are available at:
+## 💡 Overview
 
-   ```text
-   c:\Users\bhara\Desktop\HEART_DISEASE_PREDICTOR\models\disease_model.pkl
-   c:\Users\bhara\Desktop\HEART_DISEASE_PREDICTOR\models\scaler.pkl
-   ```
+**Heart Disease Predictor** is a full-stack machine learning project that predicts a person’s likelihood of developing heart disease based on clinical and lifestyle parameters.  
+It integrates a **Random Forest ML model**, a **Flask API backend**, and a **responsive HTML/CSS frontend** with real-time prediction output.
 
-Run steps (Windows PowerShell):
+---
 
-1. Create and activate a virtual environment (recommended):
+## 🧠 Features
+✅ Random Forest–based classification model  
+✅ Flask API with `/predict` endpoint  
+✅ Beautiful and simple front-end form UI  
+✅ JSON response includes both **risk prediction** and **confidence probability**  
+✅ Uses your custom dataset (`medical_data_4000.csv`)  
+✅ Fast and lightweight — runs entirely on your local machine  
 
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-```
+---
 
-2. Install dependencies:
+## 🧩 Tech Stack
 
-```powershell
-pip install -r requirements.txt
-```
+| Layer | Technology |
+|-------|-------------|
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **Backend** | Flask, Flask-CORS |
+| **Machine Learning** | Scikit-learn (RandomForestClassifier, StandardScaler) |
+| **Dataset** | medical_data_4000.csv |
+| **Deployment** | Localhost (port 5000) |
 
-3. Start the Flask server:
+---
 
-```powershell
-python app.py
-```
+## 🗂️ Project Structure
 
-4. Open `index.html` in your browser (double-click the file in Explorer or open the file URL).
-
-Notes
-- The frontend expects the server at `http://localhost:5000/predict`. If you run Flask on a different host/port, update the fetch URL inside `index.html` accordingly.
-- If model/scaler files are missing, `app.py` will return an error explaining where it looked for them.
-
-Security
-- This server is for local development only. Do not expose it to untrusted networks without adding authentication and HTTPS.
-
-Troubleshooting
-- If you get `ImportError` for `flask_cors`, run `pip install flask-cors`.
-- If you see `Model files not found`, verify the `models` folder and the two `.pkl` filenames.
